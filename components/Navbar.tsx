@@ -13,7 +13,6 @@ const navItems = [
   { name: "Contact", href: "/contact" },
 ];
 
-
 export default function Navbar() {
   const pathname = usePathname();
   return (
