@@ -24,3 +24,26 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.cursor-bubble {
+  position: fixed;
+  border-radius: 50%;
+  width: 30px;
+  background: radial-gradient(circle, rgba(132, 204, 22, 0.9), transparent);
+  pointer-events: none;
+  z-index: 50;
+  animation: bubble-fade 1s ease-out forwards;
+  mix-blend-mode: lighten;
+  filter: blur(1px);
+}
+
+@keyframes bubble-fade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
