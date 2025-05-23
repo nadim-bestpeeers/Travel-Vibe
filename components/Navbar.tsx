@@ -1,6 +1,7 @@
 
 'use client';
 import { Menu, Search } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Navbar() {
   return (
@@ -8,7 +9,7 @@ export default function Navbar() {
       <h1 className="text-3xl font-bold tracking-wide">Travel Vibe</h1>
       <div className="hidden md:flex  gap-6  text-sm font-medium">
         <a href="#">Home</a>
-        <a href="#">Places</a>
+        <Link href="/places">Places</Link>
         <a href="#">Culture</a>
         <a href="#">Food</a>
         <a href="#">Contact</a>
