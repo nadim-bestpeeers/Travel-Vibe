@@ -4,63 +4,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import PlaceCard from './PlaceCard';
 import { Autoplay } from 'swiper/modules';
+import { places } from '@/data/allplaces';
 
-
-const places = [
-  {
-    name: 'Rajwada Palace',
-    image: '/images/rajwada.jpg',
-    tag: 'Historical Landmark'
-  },
-  {
-    name: 'Sarafa Night Market',
-    image: '/images/sarafa.png',
-    tag: 'Food Street'
-  },
-  {
-    name: 'Khajrana Temple',
-    image: '/images/khajrana.jpg',
-    tag: 'Religious Site'
-  },
-  {
-    name: 'Patalpani Waterfall',
-    image: '/images/patalpani.jpg',
-    tag: 'Nature Spot'
-  },
-  {
-    name: 'Chappan Dukan',
-    image: '/images/chappan.jpg',
-    tag: 'Food Hub'
-  },
-  {
-    name: 'Rajwada Palace',
-    image: '/images/rajwada.jpg',
-    tag: 'Historical Landmark'
-  },
-  {
-    name: 'Sarafa Night Market',
-    image: '/images/sarafa.png',
-    tag: 'Food Street'
-  },
-  {
-    name: 'Khajrana Temple',
-    image: '/images/khajrana.jpg',
-    tag: 'Religious Site'
-  },
-  {
-    name: 'Patalpani Waterfall',
-    image: '/images/patalpani.jpg',
-    tag: 'Nature Spot'
-  },
-  {
-    name: 'Chappan Dukan',
-    image: '/images/chappan.jpg',
-    tag: 'Food Hub'
-  },
-  
- 
-
-];
 
 export default function PlaceCarousel() {
   return (

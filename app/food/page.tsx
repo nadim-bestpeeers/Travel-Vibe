@@ -7,9 +7,12 @@ import FoodCard from "@/components/FoodCard";
 import { famousFoods, galleryImages } from "../../data/food";
 import { motion } from "framer-motion";
 import CursorTrail from "@/components/CursurTrail";
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const categories = ["All", "Snacks", "Sweets", "Drinks", "Street Food"];
 export default function FoodPage() {
+   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [filteredFoods, setFilteredFoods] = useState(famousFoods);
 
@@ -30,8 +33,16 @@ export default function FoodPage() {
   return (
     <>
     <CursorTrail/>
-    <div className="bg-[#0b1d1a] text-white min-h-screen">
+    <div className="bg-[#0b1d1a] text-white min-h-screen ">
       {/* Hero Section */}
+      <div className="absolute top-0 left-0 right-0 z-10  flex items-center justify-between p-4">
+          <button
+            onClick={() => router.back()}
+            className="hover:text-lime-300 text-white transition duration-200 cursor-pointer fixed top-4 left-4 z-20"
+          >
+            <ChevronLeft size={24} />
+          </button>
+        </div>
       <div className="relative h-[60vh] w-full" >
         <Image
           src="/food/hero.jpeg"
@@ -91,9 +102,17 @@ export default function FoodPage() {
 
       {/* Gallery */}
       <h2 className="text-3xl text-center mt-16 mb-4 font-bold text-lime-300">Food Gallery</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 px-4" data-aos="fade-up">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 px-4">
         {galleryImages.map((src, i) => (
-          <div key={i} className="relative w-full h-64">
+          
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.1 }}
+              viewport={{ once: false }}
+              className="relative w-full h-64"
+            >
             <Image
               src={src}
               alt="Food Gallery"
@@ -101,15 +120,15 @@ export default function FoodPage() {
               objectFit="cover"
               className="rounded-lg hover:scale-105 transition-transform duration-300"
             />
-          </div>
+         </motion.div>
         ))}
       </div>
 
       {/* Quote Section */}
       <div className="bg-[#0f172a] text-gray-300 text-center py-12 px-4 mt-16">
         <blockquote className="italic text-xl max-w-3xl mx-auto">
-          "Indore’s food isn’t just a meal. It’s a memory. It’s a midnight walk
-          in Sarafa, it’s Poha for breakfast, it’s joy in every bite."
+          &quot;Indore’s food isn’t just a meal. It’s a memory. It’s a midnight walk
+          in Sarafa, it’s Poha for breakfast, it’s joy in every bite.&quot;
         </blockquote>
         <p className="mt-4 text-lime-400 font-semibold">— Local Foodie</p>
       </div>
