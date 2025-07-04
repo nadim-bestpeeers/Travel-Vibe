@@ -4,6 +4,7 @@ import { Menu, Search } from 'lucide-react';
 import Link from 'next/link'; 
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
+import Logo from './Logo';
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -17,7 +18,7 @@ export default function Navbar() {
   const pathname = usePathname();
   return (
     <nav className="absolute top-0 w-full z-50 px-8 py-4 flex justify-between items-center text-white">
-      <h1 className="text-3xl font-bold tracking-wide">Travel Vibe</h1>
+      <h1 className="text-3xl font-bold tracking-wide"><Logo/></h1>
       <div className="hidden md:flex  gap-6  text-sm font-medium">
       {navItems.map(({ name, href }) => (
         <Link
