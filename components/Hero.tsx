@@ -2,13 +2,15 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import CursorRain from "./CursurRain";
+import FooterWaterWave from "./Footer";
 
 export default function Hero() {
   return (
     <>
-     <CursorRain/>
+    
       {" "}
       <section className="relative h-screen w-full overflow-hidden">
+      <CursorRain/>
         <Image
           src="/images/backg.png"
           alt="Indore city"
@@ -43,7 +45,14 @@ export default function Hero() {
             Browse Destinations
           </motion.button>
         </div>
+
+        <div className="absolute bottom-0 w-full pointer-events-none">
+        <FooterWaterWave />
+      </div>
+      
       </section>
+      
+      
     </>
   );
 }
