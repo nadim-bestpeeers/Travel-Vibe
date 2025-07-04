@@ -3,12 +3,19 @@ import { useEffect, useRef } from "react";
 
 export default function CursorRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
+    const container = containerRef.current!;
     const ctx = canvas.getContext("2d")!;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+
+    const resizeCanvas = () => {
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+    };
+
+    resizeCanvas();
 
     const raindrops: {
       x: number;
@@ -25,10 +32,16 @@ export default function CursorRain() {
     }[] = [];
 
     const createRaindrops = (x: number, y: number) => {
+      const rect = container.getBoundingClientRect();
+      const localX = x - rect.left;
+      const localY = y - rect.top;
+
+      if (localX < 0 || localY < 0 || localX > rect.width || localY > rect.height) return;
+
       for (let i = 0; i < 8; i++) {
         raindrops.push({
-          x: x + Math.random() * 20 - 10,
-          y: y + Math.random() * 20 - 10,
+          x: localX + Math.random() * 20 - 10,
+          y: localY + Math.random() * 20 - 10,
           length: Math.random() * 8 + 6,
           speed: Math.random() * 1.5 + 0.8,
           alpha: Math.random() * 0.2 + 0.15,
@@ -39,13 +52,12 @@ export default function CursorRain() {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw rain
       for (let i = 0; i < raindrops.length; i++) {
         const drop = raindrops[i];
         ctx.beginPath();
         ctx.moveTo(drop.x, drop.y);
         ctx.lineTo(drop.x, drop.y + drop.length);
-        ctx.strokeStyle = `rgba(173, 216, 230, ${drop.alpha})`; // light blue
+        ctx.strokeStyle = `rgba(173, 216, 230, ${drop.alpha})`;
         ctx.lineWidth = 1;
         ctx.stroke();
 
@@ -58,7 +70,6 @@ export default function CursorRain() {
         }
       }
 
-      // Draw ripples
       for (let i = 0; i < ripples.length; i++) {
         const ripple = ripples[i];
         ctx.beginPath();
@@ -79,30 +90,32 @@ export default function CursorRain() {
       requestAnimationFrame(draw);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      createRaindrops(e.clientX, e.clientY);
-    };
-
     draw();
-    window.addEventListener("mousemove", handleMouseMove);
 
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      if (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      ) {
+        createRaindrops(e.clientX, e.clientY);
+      }
     };
-    window.addEventListener("resize", handleResize);
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("resize", resizeCanvas);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", resizeCanvas);
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 10 }}
-    />
+    <div ref={containerRef} className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+      <canvas ref={canvasRef} className="w-full h-full" />
+    </div>
   );
 }
