@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import CursorSmoke from "@/components/CursurTrail";
-import CursorTrail from "@/components/CursurTrail";
-import Footer from "@/components/Footer";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,12 +25,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
+      <body suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         
         {children}
-        <Footer/>
+        <Toaster position="top-right" toastOptions={{duration:3000}}/>
       </body>
     </html>
   );
