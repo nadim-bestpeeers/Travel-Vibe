@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import CursorTrail from "@/components/CursurTrail";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { isAuthenticated } from "@/utils/auth"; // Adjust the import path as necessary  
 
 const categories = ["All", "Snacks", "Sweets", "Drinks", "Street Food"];
 export default function FoodPage() {
@@ -16,6 +17,11 @@ export default function FoodPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [filteredFoods, setFilteredFoods] = useState(famousFoods);
 
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/login");
+    }
+  }, [router]);
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
