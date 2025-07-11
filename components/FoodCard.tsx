@@ -11,7 +11,7 @@ export default function FoodCard({ name, image, description, places }: Props) {
   return (
     <div className="bg-[#1a1f1e] rounded-2xl shadow-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lime-400/20 group">
       <Image
-        src={image}
+        src={`http://localhost:5000/uploads/${image}`}
         alt={name}
         width={400}
         height={250}

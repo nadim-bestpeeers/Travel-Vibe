@@ -13,7 +13,7 @@ const SmokeCursor = () => {
     if (!ctx) return;
 
     let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    let height = (canvas.height = window.innerHeight);  
     let particles: any[] = [];
 
     const createParticle = (x: number, y: number) => {

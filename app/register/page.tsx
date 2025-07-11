@@ -12,6 +12,7 @@ interface RegisterResponse {
   userId: string;
   name: string;
   msg?: string;
+  role: string;
 }
 
 export default function RegisterPage() {
@@ -61,7 +62,7 @@ export default function RegisterPage() {
     try {
       const res = await axios.post<RegisterResponse>("http://localhost:5000/api/auth/register", formData);
       saveToken(res.data.token);
-      saveUser(res.data.userId, res.data.name);
+      saveUser(res.data.userId, res.data.name, res.data.role);
       toast.success("Registration successful!");
       router.push("/");
     } catch (err) {
