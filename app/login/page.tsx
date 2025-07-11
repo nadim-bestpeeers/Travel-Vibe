@@ -6,11 +6,14 @@ import { useRouter } from "next/navigation";
 import { saveToken, saveUser } from "@/utils/auth";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+
 interface LoginResponse {
   token: string;
   userId: string;
   name: string;
   msg?: string;
+  role: string;
 }
 
 export default function LoginPage() {
@@ -24,14 +27,16 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post<LoginResponse>("/auth/login", formData);
+      const res = await axios.post<LoginResponse>("http://localhost:5000/api/auth/login", formData);
       saveToken(res.data.token);
-      saveUser(res.data.userId, res.data.name);
+      saveUser(res.data.userId, res.data.name, res.data.role);
       toast.success("Login successful!");
 
       router.push("/");
-    } catch (err) {
-      console.log(err);
+    } catch (err: unknown) {
+      const axiosError = err as AxiosError<{ msg: string }>;
+      const errorMessage = axiosError.response?.data?.msg || "Login failed. Please try again.";
+      toast.error(errorMessage);
     }
   };
 

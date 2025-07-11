@@ -4,18 +4,34 @@ import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import FoodCard from "@/components/FoodCard";
-import { famousFoods, galleryImages } from "../../data/food";
+import {galleryImages } from "../../data/food";
 import { motion } from "framer-motion";
 import CursorTrail from "@/components/CursurTrail";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { isAuthenticated } from "@/utils/auth"; // Adjust the import path as necessary  
+import { isAuthenticated } from "@/utils/auth"; 
+import API from "@/lib/axios";
+import Link from "next/link";
+import { getRole } from "@/utils/auth";
+
 
 const categories = ["All", "Snacks", "Sweets", "Drinks", "Street Food"];
+interface FoodType {
+  _id: string;
+  name: string;
+  image: string;
+  description: string;
+  places: string[];
+  category: string;
+}
+
 export default function FoodPage() {
    const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [filteredFoods, setFilteredFoods] = useState(famousFoods);
+  const [allFoods, setAllFoods] = useState<FoodType[]>([]);
+  const [filteredFoods, setFilteredFoods] = useState<FoodType[]>([]);
+  const role = getRole();
+  const isAdmin = role === "admin";
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -23,24 +39,38 @@ export default function FoodPage() {
     }
   }, [router]);
 
+  
+
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
 
   useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        const res = await API.get<FoodType[]>("/foods");
+        setAllFoods(res.data);
+        setFilteredFoods(res.data);
+      } catch (err) {
+        console.error("Error fetching foods:", err);
+      }
+    };
+    fetchFoods();
+  }, []);
+
+  useEffect(() => {
     if (selectedCategory === "All") {
-      setFilteredFoods(famousFoods);
+      setFilteredFoods(allFoods);
     } else {
-      setFilteredFoods(famousFoods.filter((food) => food.category === selectedCategory));
+      setFilteredFoods(allFoods.filter((food) => food.category === selectedCategory));
     }
-  }, [selectedCategory]);
+  }, [selectedCategory, allFoods]);
 
 
   return (
     <>
     <CursorTrail/>
     <div className="bg-[#0b1d1a] text-white min-h-screen ">
-      {/* Hero Section */}
       <div className="absolute top-0 left-0 right-0 z-10  flex items-center justify-between p-4">
           <button
             onClick={() => router.back()}
@@ -69,7 +99,19 @@ export default function FoodPage() {
       </div>
 
       {/* Categories */}
-
+      <div className="flex m-5 justify-between items-center mb-4">
+        <h1 className="text-2xl md:text-4xl font-bold text-white">
+          Top Foods
+        </h1>
+        {isAdmin && (
+          <Link
+            href="/add-food"
+            className="px-4 py-2 bg-lime-500 text-black font-semibold rounded hover:bg-lime-400 transition"
+          >
+            + Add Food
+          </Link>
+        )}
+      </div>
       <motion.div
         className="flex flex-wrap gap-4 overflow-x-auto my-10 ml-2 pb-2 scrollbar-hide"
         initial={{ x: -100, opacity: 0 }}
@@ -77,6 +119,8 @@ export default function FoodPage() {
         viewport={{ once: false , amount: 0.2}}
         transition={{ duration: 0.6 }}
       >
+        
+
         {categories.map((category) => (
           <button
             key={category}
@@ -96,17 +140,15 @@ export default function FoodPage() {
         ))}
       </motion.div>
 
-      {/* Food Cards */}
       <div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4"
         data-aos="fade-up"
       >
         {filteredFoods.map((food) => (
-          <FoodCard key={food.name} {...food} />
+          <FoodCard key={food._id} {...food} />
         ))}
       </div>
 
-      {/* Gallery */}
       <h2 className="text-3xl text-center mt-16 mb-4 font-bold text-lime-300">Food Gallery</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 px-4">
         {galleryImages.map((src, i) => (
@@ -130,7 +172,6 @@ export default function FoodPage() {
         ))}
       </div>
 
-      {/* Quote Section */}
       <div className="bg-[#0f172a] text-gray-300 text-center py-12 px-4 mt-16">
         <blockquote className="italic text-xl max-w-3xl mx-auto">
           &quot;Indore’s food isn’t just a meal. It’s a memory. It’s a midnight walk
